@@ -34,7 +34,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "Product.findByImgSrc", query = "SELECT p FROM Product p WHERE p.imgSrc = :imgSrc")
     , @NamedQuery(name = "Product.findByDetailLink", query = "SELECT p FROM Product p WHERE p.detailLink = :detailLink")
     , @NamedQuery(name = "Product.findByDomain", query = "SELECT p FROM Product p WHERE p.domain = :domain")
-    , @NamedQuery(name = "Product.findByNameAndCategoryId", query = "SELECT p FROM Product p WHERE p.productName = :productName AND p.categoryId = :categoryId AND p.domain = :domain")})
+    , @NamedQuery(name = "Product.findByNameAndCategoryId", query = "SELECT p FROM Product p WHERE lower(p.productName) LIKE lower(:productName) AND p.categoryId = :categoryId AND lower(p.domain) = lower(:domain)")})
 public class Product implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -43,18 +43,18 @@ public class Product implements Serializable {
     @Basic(optional = false)
     @Column(name = "Id", nullable = false)
     private Integer id;
-    @Column(name = "ProductName", length = 256)
+    @Column(name = "ProductName", columnDefinition = "nvarchar(256)")
     private String productName;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "ProductPrice", precision = 53)
     private Double productPrice;
-    @Column(name = "ImgSrc", length = 256)
+    @Column(name = "ImgSrc", columnDefinition = "nvarchar(256)")
     private String imgSrc;
-    @Column(name = "DetailLink", length = 256)
+    @Column(name = "DetailLink", columnDefinition = "nvarchar(256)")
     private String detailLink;
-    @Column(name = "Domain", length = 256)
+    @Column(name = "Domain", columnDefinition = "nvarchar(256)")
     private String domain;
-    @Column(name = "CategoryId", length = 256)
+    @Column(name = "CategoryId", columnDefinition = "nvarchar(256)")
     private Integer categoryId;
     @JoinColumn(name = "Category", referencedColumnName = "CategoryId")
     @ManyToOne

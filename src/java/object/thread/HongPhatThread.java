@@ -5,6 +5,7 @@
  */
 package object.thread;
 
+import java.util.Date;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,7 +43,8 @@ public class HongPhatThread extends BaseThread implements Runnable{
                         }
                     }
                 }
-                this.sleep(60*60*60*60);
+                // 1000ms = 1s, total = 1 hour
+                this.sleep(1000*60*60);
                 synchronized (BaseThread.getInstance()){
                     while (BaseThread.isSuspended()) {                        
                         BaseThread.getInstance().wait();

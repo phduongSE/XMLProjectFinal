@@ -145,7 +145,6 @@ public class GreenfurniEachPageCrawler extends BaseCrawler implements Runnable {
                             }
                         }
                     }
-                    System.out.println("Category: " + category.getCategoryName() + ", |Name: " + productName);
                     Product p = new Product(new Integer(1), productName, realPrice, imgLink, detailLink, AppConstant.URL_GREENFURNI, category.getCategoryId());
 
                     try {

@@ -41,9 +41,6 @@ public class HongPhatCrawler extends BaseCrawler implements Runnable {
             reader = getBufferedReaderForURL(url);
             int lastPage = 0;
             String line = "";
-//            String document = "";
-//            boolean isStart = false;
-            System.out.println("Category Name: " + categoryName);
 
             while ((line = reader.readLine()) != null) {
                 if (line.contains("/section")) {

@@ -49,8 +49,6 @@ public class GreenfurniCrawler extends BaseCrawler implements Runnable {
             reader = getBufferedReaderForURL(url);
             int lastPage = 0;
             String line = "";
-//            String document = "";
-//            boolean isStart = false;
 
             while ((line = reader.readLine()) != null) {
                 if (line.contains("class=\"pagination")) {

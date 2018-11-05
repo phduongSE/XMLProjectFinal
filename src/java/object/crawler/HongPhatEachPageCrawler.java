@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletContext;
@@ -45,11 +46,10 @@ public class HongPhatEachPageCrawler extends BaseCrawler implements Runnable {
         BufferedReader reader = null;
         try {
             reader = getBufferedReaderForURL(url);
-            String line = "";
             String document = "<document>";
+            String line = "";
             boolean isFound = false;
             boolean isStart = false;
-            System.out.println("EachPageCraller");
             while ((line = reader.readLine()) != null) {
                 if (isFound && line.contains("/section")) {
                     break;
@@ -79,10 +79,14 @@ public class HongPhatEachPageCrawler extends BaseCrawler implements Runnable {
                 Logger.getLogger(HongPhatEachPageCrawler.class.getName()).log(Level.SEVERE, null, ex);
             }
             // Parser
-            stAXParserForEachPage(document);
+            if (isStart) {
+                stAXParserForEachPage(document);
+            }
         } catch (IOException ex) {
             Logger.getLogger(HongPhatEachPageCrawler.class.getName()).log(Level.SEVERE, null, ex);
         } catch (XMLStreamException ex) {
+            Logger.getLogger(HongPhatEachPageCrawler.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoSuchElementException ex) {
             Logger.getLogger(HongPhatEachPageCrawler.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -109,6 +113,10 @@ public class HongPhatEachPageCrawler extends BaseCrawler implements Runnable {
                     // Detail link 
                     Attribute attrHref = startElement.getAttributeByName(new QName("href"));
                     detailLink = attrHref == null ? "" : attrHref.getValue();
+                    // stop at paging
+                    if (detailLink.contains("http://dogohongphat.com")) {
+                        break;
+                    }
                     detailLink = AppConstant.URL_HongPhat + detailLink;
 
                     Attribute attrTitle = startElement.getAttributeByName(new QName("title"));
@@ -130,8 +138,10 @@ public class HongPhatEachPageCrawler extends BaseCrawler implements Runnable {
                                     event = (XMLEvent) eventReader.next();
                                     price = event.asCharacters().getData();
                                     price = price.replaceAll("\\D+", "");
-                                    realPrice = Double.parseDouble(price);
-                                    // skip to add to cart button
+                                    if (!price.isEmpty()) {
+                                        realPrice = Double.parseDouble(price);
+                                    }
+                                    // skip add to cart button
                                     eventReader.nextTag();
                                     eventReader.nextTag();
                                     eventReader.nextTag();
@@ -145,8 +155,10 @@ public class HongPhatEachPageCrawler extends BaseCrawler implements Runnable {
                             }
                         }
                     }
-                    System.out.println("Category: " + category.getCategoryName() + ", |Name: " + productName);
-                    Product p = new Product(new Integer(1), productName, realPrice, detailLink, imgLink, AppConstant.URL_HongPhat, category.getCategoryId());
+                    if (productName.isEmpty()) {
+                        System.out.println("Product empty");
+                    }
+                    Product p = new Product(1, productName, realPrice, detailLink, imgLink, AppConstant.URL_HongPhat, category.getCategoryId());
 
                     try {
                         synchronized (BaseThread.getInstance()) {
@@ -154,7 +166,7 @@ public class HongPhatEachPageCrawler extends BaseCrawler implements Runnable {
                                 BaseThread.getInstance().wait();
                             }
                         }
-                    } catch (Exception e) {
+                    } catch (InterruptedException e) {
                         Logger.getLogger(HongPhatEachPageCrawler.class.getName()).log(Level.SEVERE, null, e);
                     }
 

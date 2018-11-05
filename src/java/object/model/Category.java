@@ -10,6 +10,8 @@ import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -23,22 +25,23 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author phduo
  */
 @Entity
-@Table(name = "Category", catalog = "XMLProjectDB", schema = "SA")
+@Table(name = "Category", catalog = "XMLProjectDB", schema = "dbo")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Category.findAll", query = "SELECT c FROM Category c")
     , @NamedQuery(name = "Category.findByCategoryId", query = "SELECT c FROM Category c WHERE c.categoryId = :categoryId")
-    , @NamedQuery(name = "Category.findByCategoryName", query = "SELECT c FROM Category c WHERE c.categoryName = :categoryName")})
+    , @NamedQuery(name = "Category.findByCategoryName", query = "SELECT c FROM Category c WHERE lower(c.categoryName) LIKE lower(:categoryName)")})
 public class Category implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "CategoryId", nullable = false)
     private Integer categoryId;
-    @Column(name = "CategoryName", length = 100)
+    @Column(name = "CategoryName", columnDefinition = "nvarchar(256)")
     private String categoryName;
-    @OneToMany(mappedBy = "categoryId")
+    @OneToMany(mappedBy = "category")
     private Collection<Product> productCollection;
 
     public Category() {

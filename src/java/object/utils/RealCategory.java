@@ -14,7 +14,7 @@ public class RealCategory {
     public static String getRealCategoryName(String categoryName) {
         categoryName = categoryName.toLowerCase();
         if (categoryName.contains("bàn ăn")) {
-            return "Nội thất nhà bép";
+            return "Nội thất nhà bếp";
         }
         if (categoryName.contains("phòng ngủ") || categoryName.contains("tủ gỗ")) {
             return "Nội thất phòng ngủ";

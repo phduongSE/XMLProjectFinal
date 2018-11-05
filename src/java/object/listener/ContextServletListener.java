@@ -27,8 +27,8 @@ public class ContextServletListener implements ServletContextListener{
         realPath = sce.getServletContext().getRealPath("/");
 
         final ServletContext context = sce.getServletContext();
-//        greenfurniThread = new GreenfurniThread(context);
-//        greenfurniThread.start();
+        greenfurniThread = new GreenfurniThread(context);
+        greenfurniThread.start();
         
         hongPhatThread = new HongPhatThread(context);
         hongPhatThread.start();

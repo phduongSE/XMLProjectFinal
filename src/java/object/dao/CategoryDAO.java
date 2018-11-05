@@ -38,7 +38,7 @@ public class CategoryDAO extends BaseDAO<Category, Integer> {
     public synchronized Category getCategoryByName(String categoryName) {
         EntityManager em = DBUtils.getEntityManager();
         try {
-            List<Category> result = em.createNamedQuery("Category.findByCategoryname", Category.class)
+            List<Category> result = em.createNamedQuery("Category.findByCategoryName", Category.class)
                     .setParameter("categoryName", categoryName)
                     .getResultList();
 

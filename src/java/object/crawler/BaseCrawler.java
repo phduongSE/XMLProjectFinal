@@ -28,7 +28,7 @@ import object.utils.RealCategory;
  */
 public class BaseCrawler {
     private ServletContext context;
-    public static final Object LOCK = new Object();
+    private static final Object LOCK = new Object();
 
     public BaseCrawler(ServletContext context) {
         this.context = context;
@@ -63,7 +63,7 @@ public class BaseCrawler {
             String realCategory = RealCategory.getRealCategoryName(categoryName);
             if (realCategory != null) {
                 CategoryDAO dao = CategoryDAO.getInstance();
-                category = dao.getCategoryByName(categoryName);
+                category = dao.getCategoryByName(realCategory);
                 if (category == null) {
                     category = new Category(new Integer(1), realCategory);
                     dao.create(category);

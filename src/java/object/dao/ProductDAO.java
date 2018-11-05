@@ -35,7 +35,7 @@ public class ProductDAO extends BaseDAO<Product, Integer> {
         return instance;
     }
 
-    public Product getProductBy(String productName, String categoryId, String domainId) {
+    public Product getProductBy(String productName, String categoryId, String domain) {
         EntityManager em = DBUtils.getEntityManager();
         try {
             EntityTransaction transaction = em.getTransaction();
@@ -43,11 +43,11 @@ public class ProductDAO extends BaseDAO<Product, Integer> {
             List<Product> result = em.createNamedQuery("Product.findByNameAndCategoryId", Product.class)
                     .setParameter("productName", productName)
                     .setParameter("categoryId", Integer.parseInt(categoryId))
-                    .setParameter("domainId", Integer.parseInt(domainId))
+                    .setParameter("domain", domain)
                     .getResultList();
             transaction.commit();
             if (result != null && !result.isEmpty()) {
-                return result.get(0);
+                 return result.get(0);
             }
         }catch(Exception e){
             Logger.getLogger(ProductDAO.class.getName()).log(Level.SEVERE, null, e);
@@ -68,7 +68,10 @@ public class ProductDAO extends BaseDAO<Product, Integer> {
         if (existedProduct == null) {
             result = create(product);
         }else{
-            result = update(product);
+            existedProduct.setProductPrice(product.getProductPrice());
+            existedProduct.setImgSrc(product.getImgSrc());
+            existedProduct.setDetailLink(product.getDetailLink());
+            result = update(existedProduct);
         }
     }
 }

@@ -40,7 +40,8 @@ public class GreenfurniThread extends BaseThread implements Runnable{
                         }
                     }
                 }
-                this.sleep(60*60*60*60);
+                // 1000ms = 1s, total = 1 hour
+                this.sleep(1000*60*60);
                 synchronized (BaseThread.getInstance()){
                     while (BaseThread.isSuspended()) {                        
                         BaseThread.getInstance().wait();
