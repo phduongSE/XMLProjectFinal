@@ -52,7 +52,6 @@ public class GreenfurniCrawler extends BaseCrawler implements Runnable {
 
             while ((line = reader.readLine()) != null) {
                 if (line.contains("class=\"pagination")) {
-                    System.out.println("Category Name: " + categoryName);
                     
                     int indexOfLiTag = line.indexOf("<li");
                     int indexOfLiEndTag = line.indexOf("</li>");

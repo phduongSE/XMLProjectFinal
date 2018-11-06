@@ -17,17 +17,30 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
 /**
  *
  * @author phduo
  */
+
+//OFFSET :skip ROWS FETCH NEXT :take ROWS ONLY
 @Entity
 @Table(name = "Product", catalog = "XMLProjectDB", schema = "dbo")
-@XmlRootElement
+@XmlRootElement(name = "product")
+@XmlType(propOrder = {"productName", "productPrice", "imgSrc", "detailLink"})
+@XmlAccessorType(XmlAccessType.NONE)
 @NamedQueries({
     @NamedQuery(name = "Product.findAll", query = "SELECT p FROM Product p")
+    , @NamedQuery(name = "Product.getPaging", query = "SELECT p FROM Product p ORDER BY p.id")
+    , @NamedQuery(name = "Product.getCategoryPaging", query = "SELECT p FROM Product p WHERE p.categoryId = :categoryId ORDER BY p.id")
+    , @NamedQuery(name = "Product.countAllProduct", query = "SELECT COUNT(p.id) FROM Product p")
+    , @NamedQuery(name = "Product.countAllCategoryProduct", query = "SELECT COUNT(p.id) FROM Product p WHERE p.categoryId = :categoryId")
     , @NamedQuery(name = "Product.findById", query = "SELECT p FROM Product p WHERE p.id = :id")
     , @NamedQuery(name = "Product.findByProductName", query = "SELECT p FROM Product p WHERE p.productName = :productName")
     , @NamedQuery(name = "Product.findByProductPrice", query = "SELECT p FROM Product p WHERE p.productPrice = :productPrice")
@@ -77,6 +90,7 @@ public class Product implements Serializable {
         this.id = id;
     }
 
+    @XmlAttribute(name = "id", required = true)
     public Integer getId() {
         return id;
     }
@@ -89,22 +103,25 @@ public class Product implements Serializable {
         return productName;
     }
 
+    @XmlElement(required = true)
     public void setProductName(String productName) {
         this.productName = productName;
     }
 
-    public Double getProductPrice() {
-        return productPrice;
+    public Long getProductPrice() {
+        return productPrice.longValue();
     }
 
-    public void setProductPrice(Double productPrice) {
-        this.productPrice = productPrice;
+    @XmlElement(required = true)
+    public void setProductPrice(Long productPrice) {
+        this.productPrice = productPrice.doubleValue();
     }
 
     public String getImgSrc() {
         return imgSrc;
     }
 
+    @XmlElement(required = true)
     public void setImgSrc(String imgSrc) {
         this.imgSrc = imgSrc;
     }
@@ -113,10 +130,12 @@ public class Product implements Serializable {
         return detailLink;
     }
 
+    @XmlElement(required = true)
     public void setDetailLink(String detailLink) {
         this.detailLink = detailLink;
     }
 
+    @XmlAttribute(name = "domain", required = true)
     public String getDomain() {
         return domain;
     }
@@ -125,6 +144,7 @@ public class Product implements Serializable {
         this.domain = domain;
     }
 
+    @XmlAttribute(name = "categoryId", required = true)
     public Integer getCategoryId() {
         return categoryId;
     }

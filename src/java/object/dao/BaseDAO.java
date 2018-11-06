@@ -26,7 +26,7 @@ public class BaseDAO<T, PK extends Serializable> implements IGenericDAO<T, PK> {
         ParameterizedType genericSuperClass = (ParameterizedType) getClass().getGenericSuperclass();
         this.entityClass = (Class<T>) genericSuperClass.getActualTypeArguments()[0];
     }
-    
+
     @Override
     public T create(T t) {
         EntityManager em = DBUtils.getEntityManager();
@@ -48,7 +48,21 @@ public class BaseDAO<T, PK extends Serializable> implements IGenericDAO<T, PK> {
 
     @Override
     public T findById(PK id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        EntityManager em = DBUtils.getEntityManager();
+        try {
+            EntityTransaction transaction = em.getTransaction();
+            T result = em.find(entityClass, id);
+            if (result != null) {
+                return result;
+            }
+        } catch (Exception e) {
+            Logger.getLogger(BaseDAO.class.getName()).log(Level.SEVERE, null, e);
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+        return null;
     }
 
     @Override
@@ -89,10 +103,10 @@ public class BaseDAO<T, PK extends Serializable> implements IGenericDAO<T, PK> {
         } finally {
             if (em != null) {
                 em.close();
-                
+
             }
         }
         return null;
     }
-    
+
 }

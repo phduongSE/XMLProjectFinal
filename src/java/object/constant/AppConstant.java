@@ -11,5 +11,7 @@ package object.constant;
  */
 public class AppConstant {
     public static final String URL_GREENFURNI = "http://www.greenfurni.vn/";
+    public static final String URL_KHANGHOME = "http://www.khanghome.com/";
     public static final String URL_HongPhat = "http://dogohongphat.com/";
+    public static final Integer PAGE_SIZE = 10;
 }

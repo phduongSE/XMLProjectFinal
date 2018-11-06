@@ -155,10 +155,7 @@ public class HongPhatEachPageCrawler extends BaseCrawler implements Runnable {
                             }
                         }
                     }
-                    if (productName.isEmpty()) {
-                        System.out.println("Product empty");
-                    }
-                    Product p = new Product(1, productName, realPrice, detailLink, imgLink, AppConstant.URL_HongPhat, category.getCategoryId());
+                    Product p = new Product(1, productName, realPrice, imgLink, detailLink, AppConstant.URL_HongPhat, category.getCategoryId());
 
                     try {
                         synchronized (BaseThread.getInstance()) {

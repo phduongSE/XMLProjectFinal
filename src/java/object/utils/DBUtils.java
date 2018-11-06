@@ -43,22 +43,4 @@ public class DBUtils implements Serializable {
         
         return emf.createEntityManager();
     }
-
-    public static Connection makeConnection()
-            throws NamingException, SQLException {
-
-        Context context = new InitialContext();
-        Context tomcatContext = (Context) context.lookup("java:comp/env");
-        DataSource ds = (DataSource) tomcatContext.lookup("XMLProjectDB");
-        
-        if (ds != null) {
-            Connection con = ds.getConnection();
-            return con;
-        }
-        
-        return null;
-    }
-    
-    
-
 }
